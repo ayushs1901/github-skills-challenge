@@ -98,3 +98,22 @@ Stage-by-stage verification confirmed:
 - Final AIOps output: `payment-service` timeout and database connection timeout issues were reported with their metric and log reasons.
 
 The verified flow is `Operational Data -> Anomaly Detection -> Event -> Producer -> Topic -> Consumer -> AIOps`.
+
+## Task 7 - Reproduce the Demonstration
+
+From the repository root, run:
+
+```bash
+python3 src/aiops_pipeline.py
+python3 -m pytest -q
+```
+
+The first command processes `data/service_data.json` and prints the detected anomaly events. The second command runs the provided detector, producer, topic, consumer, and pipeline tests. A successful run should report 10 records processed, 2 anomalies detected, 2 events consumed, and all tests passing.
+
+## Task 8 - Validation Result
+
+The provided validation completed successfully. The operational data was loaded, normal observations were ignored, anomalous observations generated `ANOMALY` events, the producer published them to `service-events`, the consumer received them, and the final pipeline output reported the payment and database timeout issues. The test suite result was `8 passed`.
+
+## Supporting Documentation
+
+Detailed assessment notes: [AIOps workflow documentation](https://docs.google.com/document/d/1PR1L_YvMBPcDRREUpo2GGlbFgQYNgYoRKdi36wfZy6U/edit?usp=sharing)

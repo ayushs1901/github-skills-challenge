@@ -67,3 +67,12 @@ The complete flow is:
 6. The pipeline receives those consumed events as its downstream AIOps result and prints their service, timestamp, type, and reasons.
 
 This verifies that an anomaly event travels through the detector, producer, topic, consumer, and downstream pipeline without being lost.
+
+## Task 5 - Investigate and Correct the Workflow
+
+The original workflow contained two issues:
+
+1. **AnomalyDetector:** the log rule checked for `WARNING`, but the operational data uses `ERROR` for concerning events. The rule was corrected to check `log_level == "ERROR"`. Rerunning the detector produced two anomaly events, at 10:05 and 10:06.
+2. **EventConsumer and EventTopic:** the producer published to `service-events`, while the consumer was connected to a separate `anomaly-events` topic. The consumer was corrected to use the producer's `service-events` topic. Rerunning the producer and consumer delivered both events, with their contents preserved.
+
+These corrections use the existing detector, producer, topic, and consumer components. Focused verification confirmed `detector_events=2`, `consumer_received=2`, and `event_identity_preserved=True`.

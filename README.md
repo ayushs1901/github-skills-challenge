@@ -76,3 +76,25 @@ The original workflow contained two issues:
 2. **EventConsumer and EventTopic:** the producer published to `service-events`, while the consumer was connected to a separate `anomaly-events` topic. The consumer was corrected to use the producer's `service-events` topic. Rerunning the producer and consumer delivered both events, with their contents preserved.
 
 These corrections use the existing detector, producer, topic, and consumer components. Focused verification confirmed `detector_events=2`, `consumer_received=2`, and `event_identity_preserved=True`.
+
+## Task 6 - Execute the End-to-End Pipeline
+
+The corrected pipeline was executed with `python3 src/aiops_pipeline.py` and produced:
+
+```text
+Records processed: 10
+Anomalies detected: 2
+Events consumed: 2
+```
+
+Stage-by-stage verification confirmed:
+
+- Operational data processed: `10` records.
+- Anomalous behaviour detected: records at 10:05 and 10:06.
+- Anomaly events generated: `2` events with type `ANOMALY`.
+- Events published: `2` events published to `service-events`.
+- Events consumed: `2` events received by the consumer.
+- Events processed successfully: consumed event payloads matched the generated events.
+- Final AIOps output: `payment-service` timeout and database connection timeout issues were reported with their metric and log reasons.
+
+The verified flow is `Operational Data -> Anomaly Detection -> Event -> Producer -> Topic -> Consumer -> AIOps`.
